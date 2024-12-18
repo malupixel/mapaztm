@@ -14,4 +14,4 @@ CREATE TABLE info (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO info VALUES (1, 'last-api-read', '', NOW());
+INSERT INTO info VALUES (1, 'last-api-read', '', TO_CHAR(NOW(), 'YYYY-MM-DD HH24:MI:SS'));
