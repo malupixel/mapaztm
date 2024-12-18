@@ -31,7 +31,7 @@ final class InfoRepository extends BaseRepository
 
     public function isLastApiReadOld(): bool
     {
-        $maxTime = (new \DateTimeImmutable())->sub(new \DateInterval('PT15S'));
+        $maxTime = (new \DateTimeImmutable())->sub(new \DateInterval('PT13S'));
 
         return $this->getLastApiRead() <= $maxTime;
 
