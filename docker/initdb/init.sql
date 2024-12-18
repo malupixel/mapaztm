@@ -1,0 +1,17 @@
+CREATE TABLE vehicles (
+    number SERIAL PRIMARY KEY,
+    line VARCHAR(100) NOT NULL,
+    brigade VARCHAR(100) NOT NULL,
+    latitude INTEGER NOT NULL,
+    longitude INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE info (
+    id SERIAL PRIMARY KEY,
+    key VARCHAR(32) NOT NULL,
+    value VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO info VALUES (1, 'last-api-read', '', NOW());

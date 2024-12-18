@@ -1,0 +1,62 @@
+version: '3.7'
+services:
+  automapa_postgres:
+    image: postgres
+    container_name: automapa_postgres
+    ports:
+      - "5307:5432"
+    environment:
+      POSTGRES_ROOT_PASSWORD: root
+      POSTGRES_DATABASE: automapa
+      POSTGRES_USER: automapa
+      POSTGRES_PASSWORD: 123
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/initdb:/docker-entrypoint-initdb.d
+    networks:
+      automapa:
+        ipv4_address: 172.61.0.3
+  automapa_php:
+    build:
+      context: docker/php8.1-fpm
+      args:
+        TIMEZONE: "Europe/Warsaw"
+    container_name: automapa_php
+    ports:
+      - "9004:9004"
+    volumes:
+      - ./:/var/www/automapa:cached
+      - ./docker/logs/automapa:/var/logs:cached
+      - ./var/data:/var/data:cached
+    depends_on:
+      - automapa_postgres
+    extra_hosts:
+      - "docker-host.localhost:127.0.0.1"
+    networks:
+      automapa:
+        ipv4_address: 172.61.0.2
+  automapa_nginx:
+    build: docker/nginx
+    container_name: automapa_nginx
+    ports:
+      - "8089:8089"
+      - "9099:443"
+    depends_on:
+      - automapa_php
+    volumes:
+      - ./docker/logs/nginx:/var/logs/nginx:cached
+      - ./:/var/www/automapa:cached
+    networks:
+      automapa:
+        ipv4_address: 172.61.0.4
+        aliases:
+          - automapa.localhost
+networks:
+  automapa:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.61.0.0/24
+
+volumes:
+  pgdata:
